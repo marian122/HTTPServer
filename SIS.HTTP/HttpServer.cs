@@ -63,15 +63,14 @@ namespace SIS.HTTP
 
             byte[] fileContent = Encoding.UTF8.GetBytes(content);
 
-            string headers = "HTTP/1.0 200 OK" + GlobalConstants.NewLine +
-                                  "Server: HomeOfficeServer/1.0" + GlobalConstants.NewLine +
-                                  "Content-Type: text/html" + GlobalConstants.NewLine +
-                                  "Content-Lenght: " + fileContent.Length + GlobalConstants.NewLine +
-                                  GlobalConstants.NewLine;
+            var response = new HttpResponse(HttpStatusCode.Ok, fileContent);
+                
+            response.Headers.Add(new Header("Server", "HomeOfficeServer/1.1"));
+            response.Headers.Add(new Header("Content-Type", "text/html"));
 
-            byte[] headerBytes = Encoding.UTF8.GetBytes(headers);
-            await networkStream.WriteAsync(headerBytes, 0, headerBytes.Length);
-            await networkStream.WriteAsync(fileContent, 0, fileContent.Length);
+            byte[] responseBytes = Encoding.UTF8.GetBytes(response.ToString());
+            await networkStream.WriteAsync(responseBytes, 0, responseBytes.Length);
+            await networkStream.WriteAsync(response.Body, 0, response.Body.Length);
 
             Console.WriteLine(request);
             Console.WriteLine(new string('-', 60));
