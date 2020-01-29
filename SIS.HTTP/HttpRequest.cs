@@ -103,5 +103,8 @@ namespace SIS.HTTP
 
         public string Body { get; set; }
 
+        public IDictionary<string, string> SessionData { get; set; }
+
+
     }
 }

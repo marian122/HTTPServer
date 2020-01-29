@@ -2,12 +2,13 @@
 using SIS.HTTP.Response;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DemoApp
 {
-    public class Program
+    public static class Program
     {
         static async Task Main()
         {
@@ -27,12 +28,14 @@ namespace DemoApp
 
         private static HttpResponse FavIcon(HttpRequest request)
         {
-            throw new NotImplementedException();
+            var byteContent = File.ReadAllBytes("wwwroot/favicon.ico");
+            return new FileResponse(byteContent, "image/x-icon");
         }
 
         public static HttpResponse Index(HttpRequest request)
-        {
-            return new HtmlResponse("<h1> this is home page </h1>");
+        {   
+            var username = request.SessionData.ContainsKey("Username") ? request.SessionData["Username"] : "Anonymous";
+            return new HtmlResponse($"<h1>Home page. Hello {username}</h1>");
         }
 
         public static HttpResponse Contact(HttpRequest request)
@@ -42,6 +45,7 @@ namespace DemoApp
 
         public static HttpResponse Login(HttpRequest request)
         {
+            request.SessionData["Username"] = "Pesho";
             return new HtmlResponse("<h1> this is login page </h1>");
         }
         

@@ -12,6 +12,7 @@ namespace SIS.HTTP.Response
             this.StatusCode = HttpStatusCode.Ok;
             byte[] byteData = Encoding.UTF8.GetBytes(html);
             this.Body = byteData;
+            this.Headers.Add(new Header("Content-Type", "text/html"));
             this.Headers.Add(new Header("Content-Length", this.Body.Length.ToString()));
 
 
