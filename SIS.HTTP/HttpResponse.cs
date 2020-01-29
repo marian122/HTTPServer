@@ -12,6 +12,7 @@ namespace SIS.HTTP
             this.StatusCode = statusCode;
             this.Headers = new List<Header>();
             this.Body = body;
+            this.Cookies = new List<ResponseCookie>();
 
             if (body?.Length > 0)
             {
@@ -24,6 +25,8 @@ namespace SIS.HTTP
         public HttpStatusCode StatusCode { get; set; }
 
         public IList<Header> Headers { get; set; }
+
+        public IList<ResponseCookie> Cookies { get; set; }
 
         public byte[] Body { get; set; }
 
@@ -44,6 +47,12 @@ namespace SIS.HTTP
             foreach (var header in this.Headers)
             {
                 responseAsString.Append(header.ToString() + GlobalConstants.NewLine);
+            }
+
+            foreach (var cookie in this.Cookies)
+            {
+                responseAsString.Append($"Set-Cookie: " + cookie.ToString() + GlobalConstants.NewLine);
+
             }
 
             responseAsString.Append(GlobalConstants.NewLine);
