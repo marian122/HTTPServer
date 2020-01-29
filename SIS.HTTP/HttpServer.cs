@@ -44,39 +44,56 @@ namespace SIS.HTTP
         private async Task ProcessClientAsync(TcpClient tcpClient)
         {
             using NetworkStream networkStream = tcpClient.GetStream();
-            byte[] requestBytes = new byte[1000000]; //TODO: Use buffer
-            int bytesRead = await networkStream.ReadAsync(requestBytes, 0, requestBytes.Length);
-            string requestAsString = Encoding.UTF8.GetString(requestBytes, 0, bytesRead);
-
-            var request = new HttpRequest(requestAsString);
-
-            var content = "<h1>this is random page</h1>";
-
-            if (request.Path == "/")
+            try
             {
-                content = "<h1>this is home page</h1>";
+                byte[] requestBytes = new byte[1000000]; //TODO: Use buffer
+                int bytesRead = await networkStream.ReadAsync(requestBytes, 0, requestBytes.Length);
+                string requestAsString = Encoding.UTF8.GetString(requestBytes, 0, bytesRead);
+
+                var request = new HttpRequest(requestAsString);
+
+                var content = "<h1>this is random page</h1>";
+
+                if (request.Path == "/")
+                {
+                    content = "<h1>this is home page</h1>";
+                }
+                else if (request.Path == "/users/login")
+                {
+                    content = "<h1>this is login page</h1>";
+                }
+
+                byte[] fileContent = Encoding.UTF8.GetBytes(content);
+
+                var response = new HttpResponse(HttpStatusCode.Ok, fileContent);
+
+                response.Headers.Add(new Header("Server", "HomeOfficeServer/1.1"));
+                response.Headers.Add(new Header("Content-Type", "text/html"));
+
+                response.Cookies.Add(new ResponseCookie("sid", Guid.NewGuid().ToString())
+                { HttpOnly = true, MaxAge = 3600 });
+
+                byte[] responseBytes = Encoding.UTF8.GetBytes(response.ToString());
+                await networkStream.WriteAsync(responseBytes, 0, responseBytes.Length);
+                await networkStream.WriteAsync(response.Body, 0, response.Body.Length);
+
+                Console.WriteLine(request);
+                Console.WriteLine(new string('-', 60));
             }
-            else if(request.Path == "/users/login")
+            catch (Exception ex)
             {
-                content = "<h1>this is login page</h1>";
+                var errorResponse = new HttpResponse(
+                    HttpStatusCode.InternalServerError, 
+                    Encoding.UTF8.GetBytes(ex.ToString()));
+
+                errorResponse.Headers.Add(new Header("Content-Type", "text/plain"));
+                byte[] responseBytes = Encoding.UTF8.GetBytes(errorResponse.ToString());
+
+                await networkStream.WriteAsync(responseBytes, 0, responseBytes.Length);
+                await networkStream.WriteAsync(errorResponse.Body, 0, errorResponse.Body.Length);
+
             }
 
-            byte[] fileContent = Encoding.UTF8.GetBytes(content);
-
-            var response = new HttpResponse(HttpStatusCode.Ok, fileContent);
-                
-            response.Headers.Add(new Header("Server", "HomeOfficeServer/1.1"));
-            response.Headers.Add(new Header("Content-Type", "text/html"));
-
-            response.Cookies.Add(new ResponseCookie("sid", Guid.NewGuid().ToString()) 
-                { HttpOnly = true, MaxAge = 3600});
-             
-            byte[] responseBytes = Encoding.UTF8.GetBytes(response.ToString());
-            await networkStream.WriteAsync(responseBytes, 0, responseBytes.Length);
-            await networkStream.WriteAsync(response.Body, 0, response.Body.Length);
-
-            Console.WriteLine(request);
-            Console.WriteLine(new string('-', 60));
 
             //using NetworkStream networkStream = tcpClient.GetStream();
             //try
