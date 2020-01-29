@@ -56,6 +56,9 @@ namespace SIS.HTTP
                 string requestAsString = Encoding.UTF8.GetString(requestBytes, 0, bytesRead);
 
                 var request = new HttpRequest(requestAsString);
+
+                Console.WriteLine($"{request.HttpMethod} {request.Path}");
+
                 var route = this.routeTable.FirstOrDefault(x => x.HttpMethod == request.HttpMethod && x.Path == request.Path);
 
                 HttpResponse response;

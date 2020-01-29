@@ -1,4 +1,5 @@
 ﻿using SIS.HTTP;
+using SIS.HTTP.Response;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,41 +32,22 @@ namespace DemoApp
 
         public static HttpResponse Index(HttpRequest request)
         {
-            var content = "<h1>this is home page</h1>";
-            byte[] fileContent = Encoding.UTF8.GetBytes(content);
-            var response = new HttpResponse(HttpStatusCode.Ok, fileContent);
-            response.Headers.Add(new Header("Content-Type", "text/html"));
-
-            return response;
+            return new HtmlResponse("<h1> this is home page </h1>");
         }
 
         public static HttpResponse Contact(HttpRequest request)
         {
-            var content = "<h1>this is contact page</h1>";
-            byte[] fileContent = Encoding.UTF8.GetBytes(content);
-            var response = new HttpResponse(HttpStatusCode.Ok, fileContent);
-            response.Headers.Add(new Header("Content-Type", "text/html"));
-
-            return response;
+            return new HtmlResponse("<h1> this is contact page </h1>");
         }
 
         public static HttpResponse Login(HttpRequest request)
         {
-            var content = "<h1>this is login page</h1>";
-            byte[] fileContent = Encoding.UTF8.GetBytes(content);
-            var response = new HttpResponse(HttpStatusCode.Ok, fileContent);
-            response.Headers.Add(new Header("Content-Type", "text/html"));
-
-            return response;
+            return new HtmlResponse("<h1> this is login page </h1>");
         }
         
         public static HttpResponse DoLogin(HttpRequest request)
         {
-            var content = "<h1>this is random page</h1>";
-            byte[] fileContent = Encoding.UTF8.GetBytes(content);
-            var response = new HttpResponse(HttpStatusCode.Ok, fileContent);
-
-            return response;
+            return new HtmlResponse("<h1> this is doLogin page </h1>");
         }
     }
 
