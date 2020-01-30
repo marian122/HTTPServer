@@ -12,18 +12,33 @@ namespace DemoApp
     {
         static async Task Main()
         {
+            var db = new ApplicationDbContext();
+            db.Database.EnsureCreated();
+
             var routeTable = new List<Route>();
 
             routeTable.Add(new Route(HttpMethodType.Get, "/", Index));
-            routeTable.Add(new Route(HttpMethodType.Get, "/users/login", Login));
-            routeTable.Add(new Route(HttpMethodType.Post, "/users/login", DoLogin));
-            routeTable.Add(new Route(HttpMethodType.Get, "/contact", Contact));
+            routeTable.Add(new Route(HttpMethodType.Post, "/Tweets/Create", CreateTweet));
             routeTable.Add(new Route(HttpMethodType.Get, "/favicon.ico", FavIcon));
 
 
 
             var httpServer = new HttpServer(80, routeTable);
             await httpServer.StartAsync();
+        }
+
+        public static HttpResponse CreateTweet(HttpRequest request)
+        {
+            var db = new ApplicationDbContext();
+            db.Tweets.Add(new Tweet { 
+                CreatedOn = DateTime.UtcNow, 
+                Creator = request.FormData["creator"], 
+                Content = request.FormData["tweetName"]
+            });
+
+            db.SaveChanges();
+
+            return new HtmlResponse($"<a>Creator: {request.FormData["creator"]}</a> <br /> <a>Content: {request.FormData["tweetName"]}</a>");
         }
 
         private static HttpResponse FavIcon(HttpRequest request)
@@ -35,23 +50,7 @@ namespace DemoApp
         public static HttpResponse Index(HttpRequest request)
         {   
             var username = request.SessionData.ContainsKey("Username") ? request.SessionData["Username"] : "Anonymous";
-            return new HtmlResponse($"<h1>Home page. Hello {username}</h1>");
-        }
-
-        public static HttpResponse Contact(HttpRequest request)
-        {
-            return new HtmlResponse("<h1> this is contact page </h1>");
-        }
-
-        public static HttpResponse Login(HttpRequest request)
-        {
-            request.SessionData["Username"] = "Pesho";
-            return new HtmlResponse("<h1> this is login page </h1>");
-        }
-        
-        public static HttpResponse DoLogin(HttpRequest request)
-        {
-            return new HtmlResponse("<h1> this is doLogin page </h1>");
+            return new HtmlResponse($"<form action='/Tweets/Create' method='post'><input name='creator' /><br /><textarea type='text' name='tweetName'></textarea><br /> <input type='submit' /> </form>");
         }
     }
 
