@@ -10,6 +10,7 @@ namespace SulsApp.Models
         public Problem()
         {
             this.Submissions = new HashSet<Submission>();
+            this.Id = Guid.NewGuid().ToString();
         }
         public string Id { get; set; }
 
