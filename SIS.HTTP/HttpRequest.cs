@@ -29,15 +29,17 @@ namespace SIS.HTTP
 
             this.HttpMethod = httpMethod switch
             {
-                "POST" => HttpMethodType.Post,
                 "GET" => HttpMethodType.Get,
+                "POST" => HttpMethodType.Post,
                 "PUT" => HttpMethodType.Put,
                 "DELETE" => HttpMethodType.Delete,
                 _ => HttpMethodType.Unknown
             };
 
             this.Path = infoHeaderParts[1];
+
             var httpVersion = infoHeaderParts[2];
+
             this.HttpVersion = httpVersion switch
             {
                 "HTTP/1.0" => HttpVersionType.Http10,

@@ -1,5 +1,6 @@
 ﻿using SIS.HTTP;
 using SIS.HTTP.Response;
+using SIS.MvcFramework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace SulsApp.Controllers
 {
-    public class HomeController
+    public class HomeController : Controller
     {
         public HttpResponse Index(HttpRequest request)
         {

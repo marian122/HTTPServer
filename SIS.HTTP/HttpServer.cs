@@ -13,8 +13,7 @@ namespace SIS.HTTP
 
         private readonly TcpListener tcpListener;
         private readonly IList<Route> routeTable;
-        private readonly IDictionary<string, IDictionary<string, string>>
-            sessions;
+        private readonly IDictionary<string, IDictionary<string, string>> sessions;
 
         public HttpServer(int port, IList<Route> routeTable)
         {
@@ -22,8 +21,6 @@ namespace SIS.HTTP
             this.routeTable = routeTable;
             this.sessions = new Dictionary<string, IDictionary<string, string>>();
         }
-
-        public IList<Route> RouteTable { get; }
 
         public async Task ResetAsync()
         {
@@ -102,8 +99,6 @@ namespace SIS.HTTP
                 await networkStream.WriteAsync(responseBytes, 0, responseBytes.Length);
                 await networkStream.WriteAsync(response.Body, 0, response.Body.Length);
 
-                Console.WriteLine(request);
-                Console.WriteLine(new string('-', 60));
             }
             catch (Exception ex)
             {
