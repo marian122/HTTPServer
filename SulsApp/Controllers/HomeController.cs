@@ -12,7 +12,7 @@ namespace SulsApp.Controllers
     {
         public HttpResponse Index(HttpRequest request)
         {
-            return this.View("Index");
+            return this.View();
         }
     }
 }
