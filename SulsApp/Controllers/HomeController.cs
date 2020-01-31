@@ -12,10 +12,7 @@ namespace SulsApp.Controllers
     {
         public HttpResponse Index(HttpRequest request)
         {
-            var layout = File.ReadAllText("Views/Shared/_Layout.html");
-            var html = File.ReadAllText("Views/Home/Index.html");
-            var bodyWithLayout = layout.Replace("@RenderBody()", html);
-            return new HtmlResponse(bodyWithLayout);
+            return this.View("Index");
         }
     }
 }

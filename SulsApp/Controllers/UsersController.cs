@@ -12,18 +12,12 @@ namespace SulsApp.Controllers
     {
         public HttpResponse Login (HttpRequest request)
         {
-            var layout = File.ReadAllText("Views/Shared/_Layout.html");
-            var html = File.ReadAllText("Views/Users/Login.html");
-            var bodyWithLayout = layout.Replace("@RenderBody()", html);
-            return new HtmlResponse(bodyWithLayout);
+            return this.View("Login");
         }
 
         public HttpResponse Register(HttpRequest request)
         {
-            var layout = File.ReadAllText("Views/Shared/_Layout.html");
-            var html = File.ReadAllText("Views/Users/Register.html");
-            var bodyWithLayout = layout.Replace("@RenderBody()", html);
-            return new HtmlResponse(bodyWithLayout);
+            return this.View("Register");
         }
     }
 }
