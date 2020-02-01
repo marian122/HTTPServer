@@ -1,8 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -18,22 +17,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ViewTest\ForForeachIfView.Expected.html">
+    <None Update="ViewTests\ForForeachIfView.Expected.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ViewTest\ForForeachIfView.html">
+    <None Update="ViewTests\ForForeachIfView.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ViewTest\OnlyHtmlView.Expected.html">
+    <None Update="ViewTests\OnlyHtmlView.Expected.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ViewTest\OnlyHtmlView.html">
+    <None Update="ViewTests\OnlyHtmlView.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ViewTest\ViewModelView.Expected.html">
+    <None Update="ViewTests\ViewModelView.Expected.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ViewTest\ViewModelView.html">
+    <None Update="ViewTests\ViewModelView.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
