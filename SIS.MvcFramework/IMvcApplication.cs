@@ -1,7 +1,5 @@
 ﻿using SIS.HTTP;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SIS.MvcFramework
 {
@@ -9,6 +7,6 @@ namespace SIS.MvcFramework
     {
         void Configure(IList<Route> routeTable);
 
-        void ConfigureServices();   
+        void ConfigureServices(IServiceCollection serviceCollection);
     }
 }

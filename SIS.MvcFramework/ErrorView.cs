@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
-using static SIS.MvcFramework.ViewEngine;
 
 namespace SIS.MvcFramework
 {
@@ -13,7 +13,7 @@ namespace SIS.MvcFramework
             this.errors = errors;
         }
 
-        public string GetHtml(object model)
+        public string GetHtml(object model, string user)
         {
             StringBuilder html = new StringBuilder();
             html.AppendLine("<h1>View compilation errors:</h1>");

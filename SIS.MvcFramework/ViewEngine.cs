@@ -11,14 +11,16 @@ namespace SIS.MvcFramework
 {
     public class ViewEngine : IViewEngine
     {
-        public string GetHtml(string templateHtml, object model)
+        public string GetHtml(string templateHtml, object model, string user)
         {
             var methodCode = PrepareCSharpCode(templateHtml);
-            var typeName = model.GetType().FullName;
-            if (model.GetType().IsGenericType)
+
+            var modelType = model?.GetType() ?? typeof(object);
+            var typeName = modelType.FullName;
+
+            if (modelType.IsGenericType)
             {
-                typeName = model.GetType().Name.Replace("`1", string.Empty) + "<"
-                    + model.GetType().GenericTypeArguments.First().Name + ">";
+                typeName = GetGenericTypeFullName(modelType);
             }
 
             var code = @$"using System;
@@ -30,9 +32,10 @@ namespace AppViewNamespace
 {{
     public class AppViewCode : IView
     {{
-        public string GetHtml(object model)
+        public string GetHtml(object model, string user)
         {{
             var Model = model as {typeName};
+            var User = user;
             var html = new StringBuilder();
 
 {methodCode}
@@ -43,8 +46,28 @@ namespace AppViewNamespace
 }}";
 
             IView view = GetInstanceFromCode(code, model);
-            string html = view.GetHtml(model);
+            string html = view.GetHtml(model, user);
             return html;
+        }
+
+        private string GetGenericTypeFullName(Type modelType)
+        {
+            var argumentCountBeginning = modelType.Name.LastIndexOf('`');
+            var genericModelTypeName = modelType.Name.Substring(0, argumentCountBeginning);
+            var genericTypeFullName = $"{modelType.Namespace}.{genericModelTypeName}";
+            var genericTypeArguments = modelType.GenericTypeArguments.Select(GetGenericTypeArgumentFullName);
+            var modelTypeName = $"{genericTypeFullName}<{string.Join(", ", genericTypeArguments)}>";
+            return modelTypeName;
+        }
+
+        private string GetGenericTypeArgumentFullName(Type genericTypeArgument)
+        {
+            if (genericTypeArgument.IsGenericType)
+            {
+                return GetGenericTypeFullName(genericTypeArgument);
+            }
+
+            return genericTypeArgument.FullName;
         }
 
         private IView GetInstanceFromCode(string code, object model)
@@ -52,8 +75,12 @@ namespace AppViewNamespace
             var compilation = CSharpCompilation.Create("AppViewAssembly")
                 .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(IView).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(model.GetType().Assembly.Location));
+                .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+            if (model != null)
+            {
+                compilation = compilation.AddReferences(MetadataReference.CreateFromFile(model.GetType().Assembly.Location));
+            }
+
             var libraries = Assembly.Load(new AssemblyName("netstandard")).GetReferencedAssemblies();
             foreach (var library in libraries)
             {

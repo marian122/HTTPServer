@@ -1,9 +1,12 @@
 ﻿namespace SIS.HTTP
 {
-    public enum HttpStatusCode
+    /// <summary>
+    /// HTTP Response Status Codes.
+    /// </summary>
+    public enum HttpResponseCode
     {
         Ok = 200,
-        MovedPermamently = 301,
+        MovedPermanently = 301,
         Found = 302,
         TemporaryRedirect = 307,
         Unauthorized = 401,
@@ -11,6 +14,5 @@
         NotFound = 404,
         InternalServerError = 500,
         NotImplemented = 501,
-
     }
 }

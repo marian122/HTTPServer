@@ -1,18 +1,32 @@
 ﻿using SIS.HTTP;
+using SIS.HTTP.Logging;
 using SIS.HTTP.Response;
 using SIS.MvcFramework;
+using SulsApp.Services;
+using SulsApp.ViewModels.Home;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace SulsApp.Controllers
 {
     public class HomeController : Controller
     {
-        public HttpResponse Index(HttpRequest request)
+        private readonly ILogger logger;
+
+        public HomeController(ILogger logger)
         {
-            return this.View();
+            this.logger = logger;
+        }
+
+        [HttpGet("/")]
+        public HttpResponse Index()
+        {
+            this.logger.Log("Hello from Index");
+            var viewModel = new IndexViewModel
+            {
+                Message = "Welcome to SULS Platform!",
+                Year = DateTime.UtcNow.Year,
+            };
+            return this.View(viewModel);
         }
     }
 }

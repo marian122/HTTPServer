@@ -10,8 +10,8 @@ using SulsApp;
 namespace SulsApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200130212946_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200207163111_AddRolesToTheUsers")]
+    partial class AddRolesToTheUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,6 +82,9 @@ namespace SulsApp.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()

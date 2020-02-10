@@ -1,28 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using SIS.HTTP;
+using SIS.HTTP.Logging;
 using SIS.MvcFramework;
-using SulsApp.Controllers;
+using SulsApp.Services;
+using System;
+using System.Collections.Generic;
 
 namespace SulsApp
 {
-    public class StartUp : IMvcApplication
+    public class Startup : IMvcApplication
     {
-        public void ConfigureServices()
+        public void ConfigureServices(IServiceCollection serviceCollection)
         {
-            var db = new ApplicationDbContext();
-            db.Database.EnsureCreated();
-
+            serviceCollection.Add<IUsersService, UsersService>();
+            serviceCollection.Add<IProblemsService, ProblemsService>();
         }
 
         public void Configure(IList<Route> routeTable)
         {
-            routeTable.Add(new Route(HttpMethodType.Get, "/", new HomeController().Index));
-            routeTable.Add(new Route(HttpMethodType.Get, "/Users/Login", new UsersController().Login));
-            routeTable.Add(new Route(HttpMethodType.Get, "/Users/Register", new UsersController().Register));
-            routeTable.Add(new Route(HttpMethodType.Get, "/css/bootstrap.min.css", new StaticFilesController().Bootstrap));
-            routeTable.Add(new Route(HttpMethodType.Get, "/css/site.css", new StaticFilesController().Site));
-            routeTable.Add(new Route(HttpMethodType.Get, "/css/reset.css", new StaticFilesController().Reset));
+            var db = new ApplicationDbContext();
+            db.Database.Migrate();
         }
     }
 }
